@@ -1,11 +1,15 @@
 package com.anindoasaha.testapp.tasks;
 
+import com.anindoasaha.workflowengine.prianza.bo.AbstractTask;
 import com.anindoasaha.workflowengine.prianza.bo.WorkflowInstance;
-import com.anindoasaha.workflowengine.prianza.task.AbstractTask;
+
+import java.util.Map;
 
 public class CreateLabTask extends AbstractTask {
 
-
+    public CreateLabTask(String name) {
+        super(name);
+    }
 
     @Override
     public Object beforeAction(WorkflowInstance workflowInstance) {
@@ -13,7 +17,8 @@ public class CreateLabTask extends AbstractTask {
     }
 
     @Override
-    public Object onAction(WorkflowInstance workflowInstance) {
+    public Map<String, String> onAction(WorkflowInstance workflowInstance) {
+        System.out.println(this.getClass().getCanonicalName());
         return null;
     }
 

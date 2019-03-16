@@ -1,16 +1,24 @@
 package com.anindoasaha.testapp.tasks;
 
+import com.anindoasaha.workflowengine.prianza.bo.AbstractTask;
 import com.anindoasaha.workflowengine.prianza.bo.WorkflowInstance;
-import com.anindoasaha.workflowengine.prianza.task.AbstractTask;
+
+import java.util.Map;
 
 public class PublishLabTask extends AbstractTask {
+
+    public PublishLabTask(String name) {
+        super(name);
+    }
+
     @Override
     public Object beforeAction(WorkflowInstance workflowInstance) {
         return null;
     }
 
     @Override
-    public Object onAction(WorkflowInstance workflowInstance) {
+    public Map<String, String> onAction(WorkflowInstance workflowInstance) {
+        System.out.println(this.getClass().getCanonicalName());
         return null;
     }
 

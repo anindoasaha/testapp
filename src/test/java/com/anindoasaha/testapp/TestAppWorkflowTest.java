@@ -4,19 +4,13 @@ import com.anindoasaha.testapp.tasks.AggregateResultsTask;
 import com.anindoasaha.testapp.tasks.CreateLabTask;
 import com.anindoasaha.testapp.tasks.PublishLabTask;
 import com.anindoasaha.testapp.tasks.StudentSubmissionTask;
-import com.anindoasaha.workflowengine.prianza.api.SimpleWorkflowBuilder;
 import com.anindoasaha.workflowengine.prianza.api.WorkflowService;
 import com.anindoasaha.workflowengine.prianza.api.impl.WorkflowServiceImpl;
 import com.anindoasaha.workflowengine.prianza.bo.Task;
 import com.anindoasaha.workflowengine.prianza.bo.Workflow;
-import com.anindoasaha.workflowengine.prianza.bo.WorkflowInstance;
-import com.anindoasaha.workflowengine.prianza.task.StdOutTask;
+import com.anindoasaha.workflowengine.prianza.bo.impl.SimpleWorkflowBuilder;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class TestAppWorkflowTest {
 
