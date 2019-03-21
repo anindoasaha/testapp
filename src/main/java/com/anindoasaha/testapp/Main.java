@@ -8,6 +8,8 @@ import com.anindoasaha.workflowengine.prianza.bo.Task;
 import com.anindoasaha.workflowengine.prianza.bo.Workflow;
 import com.anindoasaha.workflowengine.prianza.bo.impl.SimpleWorkflowBuilder;
 
+import java.util.Map;
+
 import static com.anindoasaha.workflowengine.prianza.cli.cmd.Parser.defaultParser;
 
 public class Main {
@@ -23,6 +25,10 @@ public class Main {
                 .addPipe(createLabTask, publishLabTask)
                 .addPipe(publishLabTask, studentSubmissionTask)
                 .addPipe(studentSubmissionTask, aggregateResultsTask)
+                .initVariables(Map.of(
+                                    "TRYRC_FILE_ABSOLUTE_PATH", "~/.tryrc.json"
+                        )
+                )
                 .build();
         defaultParser("testapp", args, workflow);
     }
