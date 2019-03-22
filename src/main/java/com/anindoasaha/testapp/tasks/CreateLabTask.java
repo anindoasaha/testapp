@@ -1,14 +1,11 @@
 package com.anindoasaha.testapp.tasks;
 
-import com.anindoasaha.testapp.tasks.util.FileUtils;
+import com.anindoasaha.testapp.tasks.util.Utils;
 import com.anindoasaha.workflowengine.prianza.bo.AbstractTask;
 import com.anindoasaha.workflowengine.prianza.bo.WorkflowInstance;
-import com.github.dockerjava.api.DockerClient;
-import com.github.dockerjava.core.DefaultDockerClientConfig;
-import com.github.dockerjava.core.DockerClientBuilder;
-import com.github.dockerjava.core.command.BuildImageResultCallback;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 
 public class CreateLabTask extends AbstractTask {
@@ -36,29 +33,44 @@ public class CreateLabTask extends AbstractTask {
         System.out.println(this.getClass().getCanonicalName());
 
         final Map<String, String> instanceVariables = workflowInstance.getInstanceVariables();
+        final Map<String, String> taskVariables = getTaskVariables();
 
-        String pathname = FileUtils.createFolders(instanceVariables);
-        new File(pathname).mkdirs();
+        String pathname = Utils.createFolders(instanceVariables, taskVariables);
+        instanceVariables.put("working_dir", pathname);
 
-        // Get given_project_files from instanceVariables and copy to given_project_files directory
-        FileUtils.copyFiles(instanceVariables, pathname, GIVEN_PROJECT_FILES);
-        // Get answer_project_files from instanceVariables and copy to answer_project_files directory
-        FileUtils.copyFiles(instanceVariables, pathname, ANSWER_PROJECT_FILES);
-        // Get test_project_files from instanceVariables and copy to test_project_files directory
-        FileUtils.copyFiles(instanceVariables, pathname, TEST_PROJECT_FILES);
 
+        // Copy over files to given_project_files, answer_project_files and test_project_files directory
+        Utils.copyFiles(instanceVariables, taskVariables, pathname, GIVEN_PROJECT_FILES, GIVEN_PROJECT_FILES);
+        Utils.copyFiles(instanceVariables, taskVariables, pathname, ANSWER_PROJECT_FILES, ANSWER_PROJECT_FILES);
+        Utils.copyFiles(instanceVariables, taskVariables, pathname, TEST_PROJECT_FILES, TEST_PROJECT_FILES);
+
+        // Create scratch directory for grader user and copy over everything
+        String currentUser = Utils.getCurrentUser();
+        System.out.println(currentUser);
+        Utils.copyFiles(instanceVariables, taskVariables, pathname, GIVEN_PROJECT_FILES, currentUser);
+        Utils.copyFiles(instanceVariables, taskVariables, pathname, TEST_PROJECT_FILES, currentUser);
+        Utils.copyFiles(instanceVariables, taskVariables, pathname, ANSWER_PROJECT_FILES, currentUser);
+
+        File[] files = new File(pathname + File.pathSeparator + currentUser).listFiles(File::isFile);
+        if (files != null) {
+            for (File file : files) {
+                System.out.println(file.getName());
+            }
+        }
+
+        List<String> fileList = Utils.getFileList(taskVariables, List.of(GIVEN_PROJECT_FILES, TEST_PROJECT_FILES, ANSWER_PROJECT_FILES));
+
+        Utils.execJavac(pathname + File.separatorChar + currentUser, fileList);
+
+        Utils.execJava(pathname + File.separatorChar + currentUser, taskVariables.get(TEST_PROJECT_FILES).split("\\.")[0]);
+
+
+        boolean a = true;
+        if (a) {
+            throw new RuntimeException("Throwing exception to halt task completion.");
+        }
         // TODO Execute tests on the sample solution
-        DefaultDockerClientConfig.Builder config
-                = DefaultDockerClientConfig.createDefaultConfigBuilder();
-        DockerClient dockerClient = DockerClientBuilder
-                .getInstance(config)
-                .build();
-
-        String imageId = dockerClient.buildImageCmd()
-                .withDockerfile(new File(instanceVariables.get("dockerfile_path")))
-                .withPull(true)
-                .exec(new BuildImageResultCallback())
-                .awaitImageId();
+        Utils.dockerizeAndExecute(instanceVariables);
         return null;
     }
 

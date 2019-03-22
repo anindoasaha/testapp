@@ -31,20 +31,14 @@ public class PublishLabTask extends AbstractTask {
     public Map<String, String> onAction(WorkflowInstance workflowInstance) {
         System.out.println(this.getClass().getCanonicalName());
         final Map<String, String> instanceVariables = workflowInstance.getInstanceVariables();
-        String projectDescriptionFilePath = instanceVariables.get("project_description_file_path");
-        convertToHtml(projectDescriptionFilePath);
+        String projectDescriptionFilePath = getTaskVariables().get("project_description_file_path");
+        convertToHtml(instanceVariables.get("working_dir"), projectDescriptionFilePath);
         // TODO Move to web server
         return null;
     }
 
-    public static void convertToHtml(String fileName) {
+    public static void convertToHtml(String path, String fileName) {
         MutableDataSet options = new MutableDataSet();
-
-        // uncomment to set optional extensions
-        options.set(Parser.EXTENSIONS, Arrays.asList(TablesExtension.create(), StrikethroughExtension.create()));
-
-        // uncomment to convert soft-breaks to hard breaks
-        //options.set(HtmlRenderer.SOFT_BREAK, "<br />\n");
 
         Parser parser = Parser.builder(options).build();
         HtmlRenderer renderer = HtmlRenderer.builder(options).build();
@@ -53,7 +47,7 @@ public class PublishLabTask extends AbstractTask {
         try {
             File file = new File(fileName);
             document = parser.parseReader(new FileReader(file));
-            renderer.render(document, new FileWriter(file.getName() + ".html"));
+            renderer.render(document, new FileWriter(path + File.separatorChar + file.getName() + ".html"));
         } catch (IOException e) {
             e.printStackTrace();
         }
