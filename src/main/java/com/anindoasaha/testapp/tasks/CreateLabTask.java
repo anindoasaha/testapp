@@ -64,13 +64,6 @@ public class CreateLabTask extends AbstractTask {
 
         Utils.execJava(pathname + File.separatorChar + currentUser, taskVariables.get(TEST_PROJECT_FILES).split("\\.")[0]);
 
-
-        boolean a = true;
-        if (a) {
-            throw new RuntimeException("Throwing exception to halt task completion.");
-        }
-        // TODO Execute tests on the sample solution
-        Utils.dockerizeAndExecute(instanceVariables);
         return null;
     }
 

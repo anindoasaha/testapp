@@ -37,6 +37,7 @@ public class StudentSubmissionTask extends AbstractTask {
         String pathname = instanceVariables.get("working_dir");
         // Create scratch directory for user and copy over everything
         String currentUser = Utils.getCurrentUser();
+        currentUser = "studentAccount";
         System.out.println(currentUser);
         Utils.copyFiles(instanceVariables, taskVariables, pathname, GIVEN_PROJECT_FILES, currentUser);
         Utils.copyFiles(instanceVariables, taskVariables, pathname, TEST_PROJECT_FILES, currentUser);
@@ -56,12 +57,12 @@ public class StudentSubmissionTask extends AbstractTask {
         Utils.execJava(pathname + File.separatorChar + currentUser, taskVariables.get(TEST_PROJECT_FILES).split("\\.")[0]);
 
 
-        boolean a = true;
+        /*boolean a = true;
         if (a) {
             throw new RuntimeException("Throwing exception to halt task completion.");
         }
         // TODO Execute tests on the sample solution
-        Utils.dockerizeAndExecute(instanceVariables);
+        Utils.dockerizeAndExecute(instanceVariables);*/
         return null;
     }
 

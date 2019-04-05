@@ -9,11 +9,11 @@ import com.anindoasaha.workflowengine.prianza.api.WorkflowService;
 import com.anindoasaha.workflowengine.prianza.api.impl.WorkflowServiceImpl;
 import com.anindoasaha.workflowengine.prianza.bo.Task;
 import com.anindoasaha.workflowengine.prianza.bo.Workflow;
-import com.anindoasaha.workflowengine.prianza.bo.impl.SimpleWorkflowBuilder;
+import com.anindoasaha.workflowengine.prianza.bo.impl.simple.SimpleWorkflow;
 
 public class WorkflowFactory {
 
-    SimpleWorkflowBuilder workflowBuilder = null;
+    SimpleWorkflow.Builder workflowBuilder = null;
     Workflow workflow = null;
 
     public void init() {
@@ -21,7 +21,7 @@ public class WorkflowFactory {
     }
 
     public void createWorkflow() {
-        workflowBuilder = new SimpleWorkflowBuilder("TestAppWorkflow");
+        workflowBuilder = new SimpleWorkflow.Builder("TestAppWorkflow");
         Task createLabTask = new CreateLabTask("create_lab");
         Task publishLabTask = new PublishLabTask("publish_lab");
         Task studentSubmissionTask = new StudentSubmissionTask("student_submission");
