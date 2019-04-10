@@ -18,6 +18,12 @@ public class AggregateResultsTask extends AbstractTask {
     @Override
     public Map<String, String> onAction(WorkflowInstance workflowInstance) {
         System.out.println(this.getClass().getCanonicalName());
+
+        Map<String, String> instanceVariables = workflowInstance.getInstanceVariables();
+
+        String pathname = instanceVariables.get("working_dir");
+
+
         return null;
     }
 

@@ -5,6 +5,7 @@ import com.anindoasaha.testapp.tasks.CreateLabTask;
 import com.anindoasaha.testapp.tasks.PublishLabTask;
 import com.anindoasaha.testapp.tasks.StudentSubmissionTask;
 import com.anindoasaha.workflowengine.prianza.bo.Task;
+import com.anindoasaha.workflowengine.prianza.bo.TaskExecutionInfo;
 import com.anindoasaha.workflowengine.prianza.bo.Workflow;
 import com.anindoasaha.workflowengine.prianza.bo.impl.simple.SimpleWorkflow;
 
@@ -18,14 +19,15 @@ public class Main {
         SimpleWorkflow.Builder workflowBuilder = new SimpleWorkflow.Builder("TestAppWorkflow");
 
         Task createLabTask = new CreateLabTask("create_lab");
-
         Task publishLabTask = new PublishLabTask("publish_lab");
-
         Task studentSubmissionTask = new StudentSubmissionTask("student_submission");
-
         Task aggregateResultsTask = new AggregateResultsTask("aggregate_results");
 
-        Workflow workflow = workflowBuilder.addTasks(createLabTask, publishLabTask, studentSubmissionTask, aggregateResultsTask)
+        Workflow workflow = workflowBuilder
+                .addTask(createLabTask)
+                .addTask(publishLabTask)
+                .addTask(studentSubmissionTask, TaskExecutionInfo.executeMultiple())
+                .addTask(aggregateResultsTask)
                 .addPipe(createLabTask, publishLabTask)
                 .addPipe(publishLabTask, studentSubmissionTask)
                 .addPipe(studentSubmissionTask, aggregateResultsTask)
@@ -35,6 +37,8 @@ public class Main {
                 )
                 .build();
         defaultParser("testapp", args, workflow);
+
+
     }
 
 }

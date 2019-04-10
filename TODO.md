@@ -1,0 +1,17 @@
+- [ ] Create Lab Task
+    - [X] Create Course/Project Folders
+    - [X] Copy over given, test and answer files to respective directories.
+    - [X] Create grader scratch directory, copy over everything
+    - [X] Get file list.
+    - [X] Compile Code
+    - [X] Run code.
+- [ ] Publish Lab Task
+    - [X] Convert markdown to html.
+    - [ ] Publish to web server.
+- [ ] Student Submission Task
+    - [X] Create student scratch directory, copy over everything
+    - [X] Get file list.
+    - [X] Compile Code
+    - [X] Run code.
+- [ ] Aggregate Results Task
+    - [ ] Read OUT files

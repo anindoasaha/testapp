@@ -41,7 +41,8 @@ public class Utils {
         return pathname;
     }
 
-    public static void copyFiles(Map<String, String> instanceVariables, Map<String, String> taskVariables, String pathname, String taskVariableKey, String folderNameKey) {
+    public static void copyFiles(Map<String, String> instanceVariables,
+                                 Map<String, String> taskVariables, String pathname, String taskVariableKey, String folderNameKey) {
         final String projectFiles = taskVariables.get(taskVariableKey);
         File filePathDir = new File(pathname + File.separatorChar + folderNameKey);
         filePathDir.mkdirs();
@@ -50,6 +51,23 @@ public class Utils {
         for (String projectFile : projectFilesList) {
             Path src = new File(projectFile).toPath();
             Path destPath = filePathDir.toPath();
+            try {
+                Files.copy(src, destPath.resolve(src.getFileName()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void copyFilesFromFolder(String pathname, String srcFolderName, String destinationFolderName) {
+        File srcFilePathDir = new File(pathname + File.separatorChar + srcFolderName);
+        File destFilePathDir = new File(pathname + File.separatorChar + "submissions" +File.separatorChar + destinationFolderName);
+
+        File[] listOfFiles = srcFilePathDir.listFiles();
+
+        for (File listOfFile : listOfFiles) {
+            Path src = listOfFile.toPath();
+            Path destPath = destFilePathDir.toPath();
             try {
                 Files.copy(src, destPath.resolve(src.getFileName()));
             } catch (IOException e) {
@@ -67,6 +85,17 @@ public class Utils {
             for (String projectFile : projectFilesList) {
                 fileList.add(projectFile);
             }
+        }
+        return fileList;
+    }
+
+
+    public static List<String> getFileList(String pathname, String srcFolderName) {
+        File srcFilePathDir = new File(pathname + File.separatorChar + srcFolderName);
+
+        List<String> fileList = new ArrayList<>();
+        for (File listOfFile : srcFilePathDir.listFiles()) {
+            fileList.add(listOfFile.getName());
         }
         return fileList;
     }
@@ -178,7 +207,13 @@ public class Utils {
 
             @Override
             public void setProcessErrorStream(InputStream is) throws IOException {
-
+                try (final Reader reader = new InputStreamReader(is)) {
+                    String output = CharStreams.toString(reader).trim();
+                    FileWriter fileWriter = new FileWriter(new File(workingDir + File.separatorChar + mainClassName + ".ERR"));
+                    fileWriter.write(output);
+                    fileWriter.close();
+                    System.out.println(output);
+                }
             }
 
             @Override

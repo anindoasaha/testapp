@@ -7,6 +7,7 @@ import com.anindoasaha.workflowengine.prianza.bo.WorkflowInstance;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class StudentSubmissionTask extends AbstractTask {
 
@@ -37,11 +38,13 @@ public class StudentSubmissionTask extends AbstractTask {
         String pathname = instanceVariables.get("working_dir");
         // Create scratch directory for user and copy over everything
         String currentUser = Utils.getCurrentUser();
-        currentUser = "studentAccount";
+        currentUser = "studentAccount_" + UUID.randomUUID().toString();
         System.out.println(currentUser);
-        Utils.copyFiles(instanceVariables, taskVariables, pathname, GIVEN_PROJECT_FILES, currentUser);
-        Utils.copyFiles(instanceVariables, taskVariables, pathname, TEST_PROJECT_FILES, currentUser);
-        Utils.copyFiles(instanceVariables, taskVariables, pathname, ANSWER_PROJECT_FILES, currentUser);
+        Utils.copyFiles(instanceVariables, taskVariables, pathname, ANSWER_PROJECT_FILES,
+                "submissions" + File.separatorChar + currentUser);
+
+        Utils.copyFilesFromFolder(pathname, GIVEN_PROJECT_FILES, currentUser);
+        Utils.copyFilesFromFolder(pathname, TEST_PROJECT_FILES, currentUser);
 
         File[] files = new File(pathname + File.pathSeparator + currentUser).listFiles(File::isFile);
         if (files != null) {
@@ -50,19 +53,12 @@ public class StudentSubmissionTask extends AbstractTask {
             }
         }
 
-        List<String> fileList = Utils.getFileList(taskVariables, List.of(GIVEN_PROJECT_FILES, TEST_PROJECT_FILES, ANSWER_PROJECT_FILES));
+        List<String> fileList = Utils.getFileList(pathname, "submissions" + File.separatorChar + currentUser);
 
-        Utils.execJavac(pathname + File.separatorChar + currentUser, fileList);
+        Utils.execJavac(pathname + File.separatorChar + "submissions" + File.separatorChar + currentUser, fileList);
 
-        Utils.execJava(pathname + File.separatorChar + currentUser, taskVariables.get(TEST_PROJECT_FILES).split("\\.")[0]);
-
-
-        /*boolean a = true;
-        if (a) {
-            throw new RuntimeException("Throwing exception to halt task completion.");
-        }
-        // TODO Execute tests on the sample solution
-        Utils.dockerizeAndExecute(instanceVariables);*/
+        String mainClassName = "Test";
+        Utils.execJava(pathname + File.separatorChar + "submissions" + File.separatorChar + currentUser, mainClassName);
         return null;
     }
 
