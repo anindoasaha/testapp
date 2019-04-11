@@ -43,12 +43,13 @@ public class Utils {
     }
 
     public static void copyFiles(Map<String, String> instanceVariables,
-                                 Map<String, String> taskVariables, String pathname, String taskVariableKey, String folderNameKey) {
+                                 Map<String, String> taskVariables,
+                                 String pathname, String taskVariableKey, String folderNameKey) {
         final String projectFiles = taskVariables.get(taskVariableKey);
         File filePathDir = new File(pathname + File.separatorChar + folderNameKey);
         filePathDir.mkdirs();
 
-        final String[] projectFilesList = projectFiles.split(";");
+        final String[] projectFilesList = projectFiles.split(":");
         for (String projectFile : projectFilesList) {
             Path src = new File(projectFile).toPath();
             Path destPath = filePathDir.toPath();
@@ -59,6 +60,11 @@ public class Utils {
             }
         }
     }
+
+
+    /*public static void main(String[] args) {
+        copyFiles(Map.of(), Map.of("test_data_files", "test1.csv;test2.csv"), "~/.try/csci665/hw1-1", "test_data_files", "test_data_files");
+    }*/
 
     public static void copyFilesFromFolder(String pathname, String srcFolderName, String destinationFolderName) {
         File srcFilePathDir = new File(pathname + File.separatorChar + srcFolderName);
@@ -82,7 +88,7 @@ public class Utils {
         for(String key : keys) {
             final String projectFiles = taskVariables.get(key);
 
-            final String[] projectFilesList = projectFiles.split(";");
+            final String[] projectFilesList = projectFiles.split(":");
             for (String projectFile : projectFilesList) {
                 fileList.add(projectFile);
             }
@@ -95,7 +101,7 @@ public class Utils {
         File srcFilePathDir = new File(pathname + File.separatorChar + srcFolderName);
 
         List<String> fileList = new ArrayList<>();
-        for (File listOfFile : srcFilePathDir.listFiles()) {
+        for (File listOfFile : srcFilePathDir.listFiles((dir, name) -> name.endsWith(".java"))) {
             fileList.add(listOfFile.getName());
         }
         return fileList;

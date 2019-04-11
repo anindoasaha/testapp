@@ -69,7 +69,7 @@ public class CreateLabTask extends AbstractTask {
 
         Utils.execJavac(pathname + File.separatorChar + currentUser, fileList);
 
-        String[] testDataFiles = taskVariables.get(TEST_DATA_FILES).split(";");
+        String[] testDataFiles = taskVariables.get(TEST_DATA_FILES).split(":");
 
         for (String testDataFile : testDataFiles) {
             Utils.execJava(pathname + File.separatorChar + currentUser,

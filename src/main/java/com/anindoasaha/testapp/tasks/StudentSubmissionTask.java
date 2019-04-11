@@ -20,7 +20,7 @@ public class StudentSubmissionTask extends AbstractTask {
     private static final String TEST_PROJECT_FILES = "test_project_files";
     private static final String TEST_DATA_FILES = "test_data_files";
 
-    private static final String SUBMISSIONS_DIR = "SUBMISSIONS_DIR";
+    private static final String SUBMISSIONS_DIR = "submissions";
 
     public StudentSubmissionTask(String name) {
         super(name);
@@ -62,7 +62,7 @@ public class StudentSubmissionTask extends AbstractTask {
 
         Utils.execJavac(pathname + File.separatorChar + SUBMISSIONS_DIR + File.separatorChar + currentUser, fileList);
 
-        String[] testDataFiles = instanceVariables.get(TEST_DATA_FILES).split(";");
+        String[] testDataFiles = instanceVariables.get(TEST_DATA_FILES).split(":");
 
         for (String testDataFile : testDataFiles) {
 
