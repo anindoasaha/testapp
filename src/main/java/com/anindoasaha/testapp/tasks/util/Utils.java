@@ -11,6 +11,7 @@ import org.apache.commons.exec.ExecuteStreamHandler;
 import org.apache.commons.exec.ExecuteWatchdog;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -194,7 +195,7 @@ public class Utils {
 
     }
 
-    public static String execJava(String workingDir, String mainClassName) {
+    public static String execJava(String workingDir, String mainClassName, String testFileName) {
         final int[] exitCode = {0};
         CommandLine cmdLine = new CommandLine("java");
         cmdLine.addArgument(mainClassName);
@@ -203,6 +204,13 @@ public class Utils {
         executor.setStreamHandler(new ExecuteStreamHandler() {
             @Override
             public void setProcessInputStream(OutputStream os) throws IOException {
+                // Read from testFileName and write into os
+                try (final Reader reader = new InputStreamReader(new FileInputStream(new File(workingDir + File.separatorChar + testFileName)))) {
+                    String input = CharStreams.toString(reader).trim();
+                    os.write(input.getBytes(Charset.forName("UTF-8")));
+                } finally {
+                    os.close();
+                }
             }
 
             @Override

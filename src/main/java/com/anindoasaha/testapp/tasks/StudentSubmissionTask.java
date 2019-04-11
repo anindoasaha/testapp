@@ -18,6 +18,9 @@ public class StudentSubmissionTask extends AbstractTask {
     private static final String GIVEN_PROJECT_FILES = "given_project_files";
     private static final String ANSWER_PROJECT_FILES = "answer_project_files";
     private static final String TEST_PROJECT_FILES = "test_project_files";
+    private static final String TEST_DATA_FILES = "test_data_files";
+
+    private static final String SUBMISSIONS_DIR = "SUBMISSIONS_DIR";
 
     public StudentSubmissionTask(String name) {
         super(name);
@@ -30,6 +33,7 @@ public class StudentSubmissionTask extends AbstractTask {
 
     @Override
     public Map<String, String> onAction(WorkflowInstance workflowInstance) {
+
         System.out.println(this.getClass().getCanonicalName());
 
         final Map<String, String> instanceVariables = workflowInstance.getInstanceVariables();
@@ -41,10 +45,11 @@ public class StudentSubmissionTask extends AbstractTask {
         currentUser = "studentAccount_" + UUID.randomUUID().toString();
         System.out.println(currentUser);
         Utils.copyFiles(instanceVariables, taskVariables, pathname, ANSWER_PROJECT_FILES,
-                "submissions" + File.separatorChar + currentUser);
+                SUBMISSIONS_DIR + File.separatorChar + currentUser);
 
         Utils.copyFilesFromFolder(pathname, GIVEN_PROJECT_FILES, currentUser);
         Utils.copyFilesFromFolder(pathname, TEST_PROJECT_FILES, currentUser);
+        Utils.copyFilesFromFolder(pathname, TEST_DATA_FILES, currentUser);
 
         File[] files = new File(pathname + File.pathSeparator + currentUser).listFiles(File::isFile);
         if (files != null) {
@@ -53,12 +58,18 @@ public class StudentSubmissionTask extends AbstractTask {
             }
         }
 
-        List<String> fileList = Utils.getFileList(pathname, "submissions" + File.separatorChar + currentUser);
+        List<String> fileList = Utils.getFileList(pathname, SUBMISSIONS_DIR + File.separatorChar + currentUser);
 
-        Utils.execJavac(pathname + File.separatorChar + "submissions" + File.separatorChar + currentUser, fileList);
+        Utils.execJavac(pathname + File.separatorChar + SUBMISSIONS_DIR + File.separatorChar + currentUser, fileList);
 
-        String mainClassName = "Test";
-        Utils.execJava(pathname + File.separatorChar + "submissions" + File.separatorChar + currentUser, mainClassName);
+        String[] testDataFiles = instanceVariables.get(TEST_DATA_FILES).split(";");
+
+        for (String testDataFile : testDataFiles) {
+
+            String mainClassName = instanceVariables.get(TEST_PROJECT_FILES).split("\\.")[0];
+            Utils.execJava(pathname + File.separatorChar + SUBMISSIONS_DIR + File.separatorChar + currentUser,
+                    mainClassName, testDataFile);
+        }
         return null;
     }
 

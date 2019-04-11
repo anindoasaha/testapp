@@ -16,7 +16,7 @@ import static com.anindoasaha.workflowengine.prianza.cli.cmd.Parser.defaultParse
 public class Main {
 
     public static void main(String[] args) {
-        SimpleWorkflow.Builder workflowBuilder = new SimpleWorkflow.Builder("TestAppWorkflow");
+        SimpleWorkflow.Builder workflowBuilder = new SimpleWorkflow.Builder("JavaAppWorkflow");
 
         Task createLabTask = new CreateLabTask("create_lab");
         Task publishLabTask = new PublishLabTask("publish_lab");
@@ -36,7 +36,8 @@ public class Main {
                         )
                 )
                 .build();
-        defaultParser("testapp", args, workflow);
+
+        defaultParser("try", args, workflow);
 
 
     }
