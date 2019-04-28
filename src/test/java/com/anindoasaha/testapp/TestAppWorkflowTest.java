@@ -8,14 +8,14 @@ import com.anindoasaha.workflowengine.prianza.api.WorkflowService;
 import com.anindoasaha.workflowengine.prianza.api.impl.WorkflowServiceImpl;
 import com.anindoasaha.workflowengine.prianza.bo.Task;
 import com.anindoasaha.workflowengine.prianza.bo.Workflow;
-import com.anindoasaha.workflowengine.prianza.bo.impl.SimpleWorkflowBuilder;
+import com.anindoasaha.workflowengine.prianza.bo.impl.simple.SimpleWorkflow;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
 public class TestAppWorkflowTest {
 
-    SimpleWorkflowBuilder workflowBuilder = null;
+    SimpleWorkflow.Builder workflowBuilder = null;
     Workflow workflow = null;
 
 

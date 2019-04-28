@@ -62,7 +62,7 @@ public class StudentSubmissionTask extends AbstractTask {
 
         Utils.execJavac(pathname + File.separatorChar + SUBMISSIONS_DIR + File.separatorChar + currentUser, fileList);
 
-        String[] testDataFiles = instanceVariables.get(TEST_DATA_FILES).split(":");
+        String[] testDataFiles = instanceVariables.get(TEST_DATA_FILES).split(File.pathSeparator);
 
         for (String testDataFile : testDataFiles) {
 

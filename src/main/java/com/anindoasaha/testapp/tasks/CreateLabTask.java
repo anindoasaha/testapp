@@ -41,8 +41,6 @@ public class CreateLabTask extends AbstractTask {
         instanceVariables.put(TEST_PROJECT_FILES, taskVariables.get(TEST_PROJECT_FILES));
         instanceVariables.put(TEST_DATA_FILES, taskVariables.get(TEST_DATA_FILES));
 
-
-
         // Copy over files to given_project_files, answer_project_files and test_project_files directory
         Utils.copyFiles(instanceVariables, taskVariables, pathname, GIVEN_PROJECT_FILES, GIVEN_PROJECT_FILES);
         Utils.copyFiles(instanceVariables, taskVariables, pathname, ANSWER_PROJECT_FILES, ANSWER_PROJECT_FILES);
@@ -69,7 +67,7 @@ public class CreateLabTask extends AbstractTask {
 
         Utils.execJavac(pathname + File.separatorChar + currentUser, fileList);
 
-        String[] testDataFiles = taskVariables.get(TEST_DATA_FILES).split(":");
+        String[] testDataFiles = taskVariables.get(TEST_DATA_FILES).split(File.pathSeparator);
 
         for (String testDataFile : testDataFiles) {
             Utils.execJava(pathname + File.separatorChar + currentUser,

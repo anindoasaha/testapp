@@ -234,7 +234,7 @@ public class Utils {
             public void setProcessOutputStream(InputStream is) throws IOException {
                 try (final Reader reader = new InputStreamReader(is)) {
                     String output = CharStreams.toString(reader).trim();
-                    FileWriter fileWriter = new FileWriter(new File(workingDir + File.separatorChar + mainClassName + ".OUT"));
+                    FileWriter fileWriter = new FileWriter(new File(workingDir + File.separatorChar + mainClassName + "_"+ (testFileName.split(".")[0]) + ".OUT"));
                     fileWriter.write(output);
                     fileWriter.close();
                     System.out.println(output);
